@@ -33,8 +33,63 @@ Note : Check the function Parameters ,Its a double pointer .
 
 #include "stdafx.h"
 #include<stdlib.h>
+void spiral_roll(int *rows, int *columns, int **input_array,int *currow,int *curcolumn,int *a,int *index){
+	int i, k = *currow, l = *curcolumn;
+	if (k >= *rows || l >= *columns){
+		return;
+	}
+	for (i = l; i < *columns; ++i)
+	{
+		a[*index] = input_array[k][i];
+		*index = *index + 1;
+	}
+	k++;
 
+	for (i = k; i < *rows; ++i)
+	{
+		a[*index] = input_array[i][*columns - 1];
+		*index = *index + 1;
+	}
+	*columns=*columns-1;
+
+	if (k < *rows)
+	{
+		for (i = *columns - 1; i >= l; --i)
+		{
+			a[*index] = input_array[*rows - 1][i];
+			*index = *index + 1;
+		}
+		*rows=*rows-1;
+	}
+	else
+	{
+		return;
+	}
+
+	if (l < *columns)
+	{
+		for (i = *rows - 1; i >= k; --i)
+		{
+			a[*index] = input_array[i][l];
+			*index = *index + 1;
+		}
+		l++;
+	}
+	else
+	{
+		return;
+	}
+	*currow = k;
+	*curcolumn = l;
+	spiral_roll(rows, columns, input_array, currow, curcolumn, a, index);
+}
 int *spiral(int rows, int columns, int **input_array)
 {
-	return NULL;
+	if (input_array == NULL || rows <= 0 || columns <= 0)
+		return NULL;
+	int index = 0, currow = 0, curcolumn=0;
+	int *a=NULL;
+	a = (int *)malloc(sizeof(int)*(rows*columns));
+	spiral_roll(&rows, &columns, input_array, &currow, &curcolumn, a, &index);
+	return a;
 }
