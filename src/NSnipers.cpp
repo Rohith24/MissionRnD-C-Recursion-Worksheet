@@ -43,6 +43,60 @@ P.S: The Above Problem is just a modified version of a popular BackTracking prob
 */
 
 #include "stdafx.h"
-int solve_nsnipers(int *battlefield, int n){
+
+int checkvertically(int *inp, int y, int n)
+{
+	int index;
+	for (index = 0; index<n; index++)
+	{
+		if (*((inp + n*index) + y) == 1)
+			return 0;
+	}
+	return 1;
+}
+
+int checkdiagonally(int *inp, int x, int y, int n)
+{
+	int index1, index2;
+	for (index1 = x, index2 = y; index1 != -1 && index2 != n; index1--, index2++)
+	{
+		if (*((inp + n*index1) + index2) == 1)
+			return 0;
+	}
+	for (index1 = x, index2 = y; index1 != -1 && index2 != -1; index1--, index2--)
+	{
+		if (*((inp + n*index1) + index2) == 1)
+			return 0;
+	}
+	return 1;
+}
+
+
+int solvensniper(int *battlefield, int count, int n)
+{
+	int index;
+	if (count == n)
+		return 1;
+	for (index = 0; index<n; index++)
+	{
+		if (checkvertically(battlefield, index, n) && checkdiagonally(battlefield, count, index, n))
+		{
+			*((battlefield + count*n) + index) = 1;
+			if (solvensniper(battlefield, count + 1, n))
+				return 1;
+			*((battlefield + count*n) + index) = 0;
+		}
+	}
 	return 0;
 }
+
+int solve_nsnipers(int *battlefield, int n)
+{
+	if (battlefield == NULL)
+		return 0;
+	else if (solvensniper(battlefield, 0, n))
+		return 1;
+	else
+		return 0;
+}
+
